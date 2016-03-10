@@ -3,6 +3,7 @@ from flask import render_template, session, redirect, url_for, jsonify, request,
 
 from . import main
 from app.models import App, Developer
+from ..email import send_email
 
 
 # 开发者用户登陆
@@ -58,6 +59,12 @@ def signup():
         developer.save()
     except Exception, e:
         print e
+
+    token = developer.generate_confirmation_token()
+
+    send_email(developer.email, 'Confirm Your Account', 'auth/email/confirm',
+               developer=developer, token=token)
+    # send_mail(developer.email, 'Confirm Your Account', '/email/confirm', developer=developer, token=token)
 
     return jsonify({'status' : 200})
 

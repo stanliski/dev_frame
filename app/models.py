@@ -5,7 +5,8 @@
 from app import db
 from . import login_manager
 from datetime import datetime
-
+from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
+from flask import current_app
 
 # 用户角色
 class Role(db.Model):
@@ -48,6 +49,9 @@ class Developer(db.Model):
 
     username = db.Column(db.String(20))
     nickname = db.Column(db.String(20))
+
+    confirmed = db.Column(db.Boolean, default=False)
+
     sex = db.Column(db.Integer)
     qq = db.Column(db.String(60))
     weibo = db.Column(db.String(60))
@@ -66,6 +70,24 @@ class Developer(db.Model):
 
     def __init__(self, **kwargs):
         super(Developer, self).__init__(**kwargs)
+
+
+    def generate_confirmation_token(self, expiration=3600):
+        s = Serializer(current_app.config['SECRET_KEY'])
+        return s.dumps({'confirm' : self.id})
+
+
+    def confirm(self, token):
+        s = Serializer(current_app.config['SECRET_KEY'])
+        try:
+            data = s.loads(token)
+        except:
+            return False
+        if data.get('confirm') != self.id:
+            return False
+        self.confirmed = True
+        db.session.add(self)
+        return True
 
 
     def verify_password(self, password):

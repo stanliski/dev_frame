@@ -2,12 +2,16 @@
 
 from flask.ext.login      import LoginManager
 from flask.ext.sqlalchemy import SQLAlchemy
+from flask.ext.mail import Mail
 
 from config import config
 from flask import Flask
 
 # 数据库实例
 db = SQLAlchemy()
+
+# Mail
+mail = Mail()
 
 # 用户身份验证模块初始化
 login_manager = LoginManager()
@@ -27,6 +31,9 @@ def create_app(config_name):
 
     # 绑定数据库
     db.init_app(app)
+
+    # Bind Email
+    mail.init_app(app)
 
     # 绑定蓝图
     from .main import main as main_blueprint
