@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 '''
  基本模型类
 '''
@@ -48,25 +49,27 @@ class Developer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
 
     username = db.Column(db.String(20))
-    nickname = db.Column(db.String(20))
+    password = db.Column(db.String(20))
 
+    nickname = db.Column(db.String(20))
     confirmed = db.Column(db.Boolean, default=False)
 
     sex = db.Column(db.Integer)
     qq = db.Column(db.String(60))
     weibo = db.Column(db.String(60))
-
     github = db.Column(db.String(200))
-    password = db.Column(db.String(20))
-    company = db.Column(db.String(30))
+
+    school = db.Column(db.String(30))
     phone = db.Column(db.String(11))
     email = db.Column(db.String(60))
     description = db.Column(db.String(200))
     hobby = db.Column(db.String(200))
+    info = db.Column(db.String(200))
+    degree = db.Column(db.String(10))
+
     register_time = db.Column(db.DateTime)
 
     apps = db.relationship('App', backref='developer', lazy='dynamic')
-
 
     def __init__(self, **kwargs):
         super(Developer, self).__init__(**kwargs)
@@ -101,6 +104,12 @@ class Developer(db.Model):
         self.register_time = datetime.now()
         db.session.add(self)
         db.session.commit()
+
+
+    def update(self, info):
+        db.session.query(Developer).\
+            filter_by(username=self.username).update(info)
+
 
 
 # App类

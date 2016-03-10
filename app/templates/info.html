@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+{% extends "base.html" %}
+<html>
+{% block head %}
+    {{ super() }}
+{% endblock %}
+
+<body>
+
+    <!-- navbar -->
+    {% block navbar %}
+        {{ super() }}
+    {% endblock %}
+    <!-- end navbar -->
+
+    <!-- sidebar -->
+    {% block sidebar %}
+    <div id="sidebar-nav">
+        <ul id="dashboard-menu">
+            <!--<li>-->
+                <!--<a href="chart-showcase.html">-->
+                    <!--<i class="icon-signal"></i>-->
+                    <!--<span>Charts</span>-->
+                <!--</a>-->
+            <!--</li>-->
+            <li class="active">
+                <a class="dropdown-toggle" href="#">
+                    <i class="icon-th-large" ></i>
+                    <span>我的应用</span>
+                    <i class="icon-chevron-down"></i>
+                </a>
+                <ul class="submenu" style="display: block;">
+                    <li><a href="/app/list">查看应用</a></li>
+                    <li><a href="/app/create">创建应用</a></li>
+                </ul>
+            </li>
+            <li>
+                <a class="dropdown-toggle" href="#">
+                    <i class="icon-cog"></i>
+                    <span>开发者</span>
+                    <i class="icon-chevron-down"></i>
+                </a>
+                <ul class="submenu">
+                    <li><a href="/user/edit">完善资料</a></li>
+                    <li><a href="/user/modify">修改密码</a></li>
+                </ul>
+            </li>
+            <li>
+                <a class="dropdown-toggle" href="#">
+                    <i class="icon-share-alt"></i>
+                    <span>其它</span>
+                    <i class="icon-chevron-down"></i>
+                </a>
+                <ul class="submenu">
+                    <li><a href="signin.html">登 陆</a></li>
+                    <li><a href="signup.html">注 册</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    {% endblock %}
+    <!-- end sidebar -->
+
+    {% block container %}
+
+
+
+    {% endblock %}
+
+    {% block scripts %}
+	<!-- scripts -->
+        {{ super() }}
+    {% endblock %}
+
+</body>
+</html>

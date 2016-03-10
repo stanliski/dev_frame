@@ -27,6 +27,8 @@ def signin():
 
     if developer is not None:
         if developer.verify_password(password):
+            session['username'] = developer.username
+            session['password'] = developer.password
             return jsonify({'status':200})
         else:
             return jsonify({'status':402})
@@ -41,17 +43,22 @@ def signup():
     if request.method == 'GET':
         return render_template('signup.html')
 
-    username    = request.form['username']
-    password    = request.form['password']
-    email       = request.form['email']
-    repassword  = request.form['repassword']
+    username = request.form['username']
+    password = request.form['password']
+    email = request.form['email']
+    repassword = request.form['repassword']
 
+    # 错误码判断
     if username.strip() == '' or repassword.strip() == '' \
             or password.strip() == '' or email.strip() == '':
         return jsonify({'status':401})
 
     if repassword != password:
         return jsonify({'status':402})
+
+    if Developer.query.filter_by(username=username).first() != None \
+            or Developer.query.filter_by(email=email).first() != None:
+        return jsonify({'status':403})
 
     developer = Developer(username=username, password=password, email=email)
 
@@ -69,10 +76,20 @@ def signup():
     return jsonify({'status' : 200})
 
 
+# 开发者登出
+@main.route('/logout')
+def logout():
+    session['username'] = None
+    session['password'] = None
+    return render_template('signin.html')
+
 
 # 获取用户创建的APP列表
 @main.route('/app/list', methods=['GET'])
 def apps():
+
+    if check_user_login():
+        return redirect(url_for('main.signin'))
 
     # 数据进行分页处理
     page = request.args.get('page', 1, type=int)
@@ -87,6 +104,9 @@ def apps():
 # 用户创建APP
 @main.route('/app/create', methods=['GET', 'POST'])
 def new_app():
+
+    if check_user_login():
+        return redirect(url_for('main.signin'))
 
     if request.method == 'GET':
         return render_template('new-app.html')
@@ -110,9 +130,44 @@ def new_app():
     return jsonify({'status':200, 'app':app.to_json()})
 
 
-@main.route('/user/edit')
+# 编辑开发者信息
+@main.route('/user/edit', methods=['GET', 'POST'])
 def edit_user():
-    return render_template('edit-user.html')
+
+    if check_user_login():
+        return redirect(url_for('main.signin'))
+
+    if request.method == 'GET':
+        return render_template('edit-user.html')
+
+    username = session.get('username')
+    nickname = request.form.get('nickname', '', type=str)
+    sex = request.form.get('sex', 1, type=int)
+    school = request.form.get('school', '', type=str)
+    degree = request.form.get('degree', '', type=str)
+    qq = request.form.get('qq', '', type=str)
+    weibo = request.form.get('weibo', '', type=str)
+    github = request.form.get('github', '', type=str)
+    info = request.form.get('info', '', type=str)
+    hobby = request.form.get('hobby', '', type=str)
+    updateDic = dict({'nickname':nickname,'sex':sex,
+                      'school':school,'degree':degree,
+                      'qq':qq,'weibo':weibo,'github':github,
+                      'info':info, 'hobby':hobby})
+
+    developer = Developer.query.filter_by(username=username).first()
+
+    try:
+        developer.update(updateDic)
+    except Exception, e:
+        print e
+        return jsonify({'status':400})
+
+    developer = Developer.query.filter_by(username=username).first()
+
+    print "%s, %s, %s" % (developer.nickname, developer.info, developer.hobby)
+
+    return jsonify({'status':200})
 
 
 @main.route('/user/modify')
@@ -128,3 +183,10 @@ def find_password():
 @main.route('/index')
 def index():
     return render_template('index.html')
+
+
+def check_user_login():
+    if session.get('username') == None:
+        return True
+    else:
+        return False

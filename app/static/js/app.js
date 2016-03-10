@@ -85,15 +85,57 @@ $(function () {
                 if(result.status == 401){
                     $('#warning-div').show();
                     $('#warning-tip').text('输入不得为空');
-                } else if(result.status == 403){
+                } else if(result.status == 402){
                     $('#warning-div').show();
                     $('#warning-tip').text('用户名或密码错误');
+                } else if(result.status == 403){
+                    $('#warning-div').show();
+                    $('#warning-tip').text('用户名或邮箱已注册');
                 }
             }
         }
     });
 
   });
+
+
+  $('#edit-info-submit-btn').click(function(){
+
+    var nickname = $('#nickname').val();
+    var sex = $('#sex').val();
+    var school = $('#school').val();
+    var degree = $('#degree').val();
+    var qq = $('#qq').val();
+    var weibo = $('#weibo').val();
+    var github = $('#github').val();
+    var info = $('#info').val();
+    var hobby = $('#hobby').val();
+
+    $.ajax({
+        type: "POST",
+        url: "/user/edit",
+        data:{
+            "nickname" : nickname,
+            "sex" : sex,
+            "school" : school,
+            "degree" : degree,
+            "qq" : qq,
+            "weibo" : weibo,
+            "github" : github,
+            "info" : info,
+            "hobby" : hobby
+        },
+        success : function(result) {
+            if(result.status == 200){
+
+            }
+        }
+
+    });
+
+
+  });
+
 
  });
 
