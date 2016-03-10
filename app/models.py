@@ -71,6 +71,7 @@ class Developer(db.Model):
 
     apps = db.relationship('App', backref='developer', lazy='dynamic')
 
+
     def __init__(self, **kwargs):
         super(Developer, self).__init__(**kwargs)
 

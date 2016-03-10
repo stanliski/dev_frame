@@ -127,7 +127,7 @@ $(function () {
         },
         success : function(result) {
             if(result.status == 200){
-
+                window.location.href = "/user/info"
             }
         }
 

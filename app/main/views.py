@@ -170,6 +170,19 @@ def edit_user():
     return jsonify({'status':200})
 
 
+# 开发者信息
+@main.route('/user/info')
+def user_info():
+
+    if check_user_login():
+        return redirect(url_for('main.signin'))
+
+    developer = Developer.query.\
+        filter_by(username=session.get('username')).first();
+
+    return render_template('info.html', developer=developer)
+
+
 @main.route('/user/modify')
 def modify_password():
     return render_template('modify-password.html')
