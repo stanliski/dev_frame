@@ -2,6 +2,7 @@
 from flask import render_template, session, redirect, url_for, jsonify, request, current_app
 
 from . import main
+from app import db
 from app.models import App, Developer
 from ..email import send_email
 
@@ -93,8 +94,12 @@ def apps():
 
     # 数据进行分页处理
     page = request.args.get('page', 1, type=int)
-    pagination = App.query.order_by(App.create_time.desc()).paginate(page,
+
+    developer = Developer.query.filter_by(username=session.get("username")).first()
+
+    pagination = App.query.filter_by(developer_id=developer.id).order_by(App.create_time.desc()).paginate(page,
                             per_page=current_app.config['APP_LIST_PER_PAGE'], error_out=False)
+
     apps = pagination.items
 
     return render_template('app-list.html',
@@ -116,11 +121,17 @@ def new_app():
     description = request.form['description']
     company = request.form.get('company', '', type=str)
 
+    print session.get('username')
+
+    developer = Developer.query.filter_by(username=session.get("username")).first()
+
     if description.strip() == '' or app_name.strip() == '':
         return render_template('new-app.html', warning='')
 
     app = App(app_name=app_name, description=description,
               platform=platform, company=company)
+
+    app.developer = developer
 
     try:
         app.save()
@@ -128,6 +139,24 @@ def new_app():
         print e
 
     return jsonify({'status':200, 'app':app.to_json()})
+
+
+
+@main.route('/app/search', methods=['GET'])
+def search_app():
+    search_content = request.args.get('content', '', type=str)
+    page = request.args.get('page', 1, type=int)
+    if search_content.strip() == '':
+        return redirect(url_for('main.apps'))
+
+    pagination = App.query.filter(App.app_name==search_content).order_by(App.create_time.desc())\
+        .paginate(page, per_page=current_app.config['APP_LIST_PER_PAGE'], error_out=False)
+
+    apps = pagination.items
+
+    return render_template('search-list.html',
+                           apps=apps, pagination=pagination, pageNum=pagination.pages)
+
 
 
 # 编辑开发者信息
@@ -138,7 +167,8 @@ def edit_user():
         return redirect(url_for('main.signin'))
 
     if request.method == 'GET':
-        return render_template('edit-user.html')
+        developer = Developer.query.filter_by(username=session.get('username')).first()
+        return render_template('edit-user.html', developer=developer)
 
     username = session.get('username')
     nickname = request.form.get('nickname', '', type=str)
@@ -167,7 +197,7 @@ def edit_user():
 
     print "%s, %s, %s" % (developer.nickname, developer.info, developer.hobby)
 
-    return jsonify({'status':200})
+    return jsonify({'status':200, 'developer':developer.to_json()})
 
 
 # 开发者信息
@@ -179,6 +209,11 @@ def user_info():
 
     developer = Developer.query.\
         filter_by(username=session.get('username')).first();
+
+    print developer.username
+    print developer.qq
+    print developer.weibo
+    print developer.github
 
     return render_template('info.html', developer=developer)
 

@@ -63,7 +63,16 @@ $(function () {
   });
 
 
-   $('#signin-btn').click(function(){
+  $('#search-input').bind('keypress',function(event){
+    if(event.keyCode == 13){
+//        alert('test');
+        var txt = $(this).val();
+        window.location.href = "/app/search?content="+txt;
+    }
+  });
+
+
+  $('#signin-btn').click(function(){
 
     $('#warning-tip').val('');
     $('#warning-div').hide();

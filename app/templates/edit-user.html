@@ -138,7 +138,7 @@
 
                                             <div class="field-box">
                                                 <label>昵称:</label>
-                                                <input class="span8" type="text" id="nickname" name="nickname"/>
+                                                <input class="span8" type="text" id="nickname" name="nickname" value="{{ developer.nickname }}"/>
                                             </div>
                                             <div class="field-box">
                                                 <label>性别:</label>
@@ -153,7 +153,7 @@
                                             </div>
                                             <div class="field-box">
                                                 <label>邮箱:</label>
-                                                <input class="span8" type="text" id="email" name="email" />
+                                                <input class="span8" type="text" id="email" name="email" value="{{ developer.email }}"/>
                                             </div>
                                             <!--<div class="field-box success">-->
                                                 <!--<label>Username:</label>-->
@@ -170,7 +170,7 @@
 
                                             <div class="field-box">
                                                 <label>公司/学校:</label>
-                                                <input class="span8" type="text" name="school"  id="school" />
+                                                <input class="span8" type="text" name="school"  id="school" value="{{ developer.school }}"/>
                                             </div>
                                             <div class="field-box">
                                                 <label>学历:</label>
@@ -188,15 +188,15 @@
 
                                             <div class="field-box">
                                                 <label>QQ:</label>
-                                                <input class="span8" type="text" name="qq" id="qq"/>
+                                                <input class="span8" type="text" name="qq" id="qq" value="{{ developer.qq }}"/>
                                             </div>
                                             <div class="field-box">
                                                 <label>微博:</label>
-                                                <input class="span8" type="text" name="weibo" id="weibo"/>
+                                                <input class="span8" type="text" name="weibo" id="weibo" value="{{ developer.weibo }}"/>
                                             </div>
                                             <div class="field-box">
                                                 <label>Github:</label>
-                                                <input class="span8" type="text" name="github" id="github"/>
+                                                <input class="span8" type="text" name="github" id="github" value="{{ developer.github }}"/>
                                             </div>
 
                                     </div>
@@ -207,12 +207,12 @@
                                     <div class="span8">
                                             <div class="field-box">
                                                 <label>自我介绍:</label>
-                                                <textarea class="span9" name="info" id="info" ></textarea>
+                                                <textarea class="span9" name="info" id="info" value="{{ developer.info }}"></textarea>
                                                 <!--<span class="charactersleft">90 characters remaining. Field limited to 100 characters</span>-->
                                             </div>
                                             <div class="field-box">
                                                 <label>兴趣爱好:</label>
-                                                <textarea class="span9" name="hobby" id="hobby" ></textarea>
+                                                <textarea class="span9" name="hobby" id="hobby" value="{{ developer.hobby }}"></textarea>
                                                 <!--<span class="charactersleft">90 characters remaining. Field limited to 100 characters</span>-->
                                             </div>
                                     </div>

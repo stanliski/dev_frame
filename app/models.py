@@ -48,26 +48,26 @@ class Developer(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
 
-    username = db.Column(db.String(20))
-    password = db.Column(db.String(20))
+    username = db.Column(db.String(20), default='')
+    password = db.Column(db.String(20), default='')
 
-    nickname = db.Column(db.String(20))
+    nickname = db.Column(db.String(20), default='')
     confirmed = db.Column(db.Boolean, default=False)
 
-    sex = db.Column(db.Integer)
-    qq = db.Column(db.String(60))
-    weibo = db.Column(db.String(60))
-    github = db.Column(db.String(200))
+    sex = db.Column(db.Integer, default=1)
+    qq = db.Column(db.String(60), default='')
+    weibo = db.Column(db.String(60), default='')
+    github = db.Column(db.String(200), default='')
 
-    school = db.Column(db.String(30))
-    phone = db.Column(db.String(11))
-    email = db.Column(db.String(60))
-    description = db.Column(db.String(200))
-    hobby = db.Column(db.String(200))
-    info = db.Column(db.String(200))
-    degree = db.Column(db.String(10))
+    school = db.Column(db.String(30), default='')
+    phone = db.Column(db.String(11), default='')
+    email = db.Column(db.String(60), default='')
+    description = db.Column(db.String(200), default='')
+    hobby = db.Column(db.String(200), default='')
+    info = db.Column(db.String(200), default='')
+    degree = db.Column(db.String(10), default='')
 
-    register_time = db.Column(db.DateTime)
+    register_time = db.Column(db.DateTime, default=datetime.now())
 
     apps = db.relationship('App', backref='developer', lazy='dynamic')
 
@@ -108,9 +108,17 @@ class Developer(db.Model):
 
 
     def update(self, info):
+        print info
         db.session.query(Developer).\
             filter_by(username=self.username).update(info)
 
+
+     # 将数据转化为json格式
+    def to_json(self):
+        json_post = dict(username=self.username, nickname=self.nickname,
+                         sex=self.sex, qq=self.qq, weibo=self.weibo, github=self.github,
+                         school=self.school, phone=self.phone, hobby=self.hobby, info=self.info)
+        return json_post
 
 
 # App类
@@ -120,13 +128,13 @@ class App(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
 
-    app_name = db.Column(db.String(20))
-    company = db.Column(db.String(20))
-    description = db.Column(db.String(200))
-    status = db.Column(db.Integer)
-    platform = db.Column(db.Integer)
+    app_name = db.Column(db.String(20), unique=True)
+    company = db.Column(db.String(20), default='')
+    description = db.Column(db.String(200), default='')
+    status = db.Column(db.Integer, default=0)
+    platform = db.Column(db.Integer, default=0)
     developer_id = db.Column(db.Integer, db.ForeignKey('tb_developer.id'))
-    create_time = db.Column(db.DateTime)
+    create_time = db.Column(db.DateTime, default=datetime.now())
 
 
     def __init__(self, **kwargs):
@@ -141,6 +149,13 @@ class App(db.Model):
 
         db.session.add(self)
         db.session.commit()
+
+
+    def find(self, content):
+
+        return db.session.query(content).filter(App.app_name.like(content)).\
+            order_by(self.create_time.desc).all()
+
 
     # 将数据转化为json格式
     def to_json(self):
