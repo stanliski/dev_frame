@@ -3,21 +3,27 @@ $(function () {
   $("#create-app-btn").click(function(){
     var app_name = $('#app_name').val();
     var description = $('#description').val();
-    var company = $('#company').val();
+    var app_usage = $('#app-situation').val();
 
     $.ajax({
         type : "POST",  //提交方式
         url : "/app/create",//路径
         data : {
-            "app_name"      : app_name,
-            "description"   : description,
-            "company"       : company
+            "app_name"      :   app_name,
+            "description"   :   description,
+            "app_usage"     :   app_usage
         },
         success : function(result) {//返回数据根据结果进行相应的处理
             if ( result.status == 200 ) {
                 window.location.href = "/app/list";
             } else {
-//                alert('添加失败!');
+                if ( result.status == 400 ){
+                    $('#warning-div').show();
+                    $('#warning-span').text('输入不得为空');
+                } else if ( result.status == 401 ){
+                    $('#warning-div').show();
+                    $('#warning-span').text('app命名已存在');
+                }
             }
         }
     });
@@ -46,7 +52,7 @@ $(function () {
         success : function(result) {
 
             if (result.status == 200){
-                window.location.href = "/app/list"
+                window.location.href = "/signin"
             } else {
                 if(result.status == 401){
                     $('#warning-div').show();
@@ -69,6 +75,11 @@ $(function () {
         var txt = $(this).val();
         window.location.href = "/app/search?content="+txt;
     }
+  });
+
+
+  $('#app-situation').change(function(){
+    $('#app-situation').text($(this).val())
   });
 
 
@@ -108,6 +119,60 @@ $(function () {
   });
 
 
+  $('#modify-password-btn').click(function(){
+
+    var new_password = $('#new_password').val();
+    var old_password = $('#old_password').val();
+    var confirm_password = $('#confirm_password').val();
+//
+//    alert(new_password);
+//    alert(old_password);
+//    alert(confirm_password);
+
+    if(new_password == '' || old_password == '' || confirm_password == ''){
+        $('#warning-div').show();
+        $('#warning-tip').text('输入不得为空');
+        return;
+    }
+
+    if(new_password != confirm_password){
+        $('#warning-div').show();
+        $('#warning-tip').text('两次输入密码不一致');
+        return;
+    }
+
+    $.ajax({
+        type: "POST",
+        url: "/user/modify",
+        data: {
+            "new_password" : new_password,
+            "old_password" : old_password,
+            "confirm_password" : confirm_password
+        },
+        success : function(result) {
+             if (result.status == 200){
+                window.location.href = "/app/list"
+            } else {
+                if (result.status == 400){
+                    $('#warning-div').show();
+                    $('#warning-tip').text('输入不得为空');
+                } else if(result.status == 401){
+                    $('#warning-div').show();
+                    $('#warning-tip').text('两次输入密码不一致');
+                } else if(result.status == 402){
+                    $('#warning-div').show();
+                    $('#warning-tip').text('密码输入错误');
+                } else if(result.status == 403){
+                    $('#warning-div').show();
+                    $('#warning-tip').text('修改错误');
+                }
+            }
+        }
+    });
+
+  });
+
+
   $('#edit-info-submit-btn').click(function(){
 
     var nickname = $('#nickname').val();
@@ -119,6 +184,7 @@ $(function () {
     var github = $('#github').val();
     var info = $('#info').val();
     var hobby = $('#hobby').val();
+    var phone = $('#phone').val();
 
     $.ajax({
         type: "POST",
@@ -132,7 +198,8 @@ $(function () {
             "weibo" : weibo,
             "github" : github,
             "info" : info,
-            "hobby" : hobby
+            "hobby" : hobby,
+            'phone' : phone
         },
         success : function(result) {
             if(result.status == 200){

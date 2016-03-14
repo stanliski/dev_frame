@@ -9,70 +9,54 @@ from datetime import datetime
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from flask import current_app
 
-# 用户角色
-class Role(db.Model):
 
-    __tablename__ = 'tb_roles'
-
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(64), unique=True)
-
-    def __repr__(self):
-        return '<Role %r>' % self.name
-
-
-# 基本用户类
-class User(db.Model):
-
-    __tablename__ = 'tb_user'
-
-    id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(64), unique=True, index=True)
-    username = db.Column(db.String(64), unique=True, index=True)
-    password_hash = db.Column(db.String(128))
-    role_id = db.Column(db.Integer, db.ForeignKey('tb_roles.id'))
-
-    def __init__(self, **kwargs):
-        super(User, self).__init__(**kwargs)
-
-
-    @login_manager.user_loader
-    def load_user(user_id):
-        return User.query.get(int(user_id))
-
-
-# 开发者类
 class Developer(db.Model):
+
+    """
+    开发者模型类
+    tablename tb_developer
+    """
 
     __tablename__ = 'tb_developer'
 
     id = db.Column(db.Integer, primary_key=True)
-
+    # 用户名
     username = db.Column(db.String(20), default='')
+    # 密码
     password = db.Column(db.String(20), default='')
-
+    # 昵称
     nickname = db.Column(db.String(20), default='')
+    # 是否确认
     confirmed = db.Column(db.Boolean, default=False)
-
+    # 性别
     sex = db.Column(db.Integer, default=1)
+    # qq账号
     qq = db.Column(db.String(60), default='')
+    # 微博账号
     weibo = db.Column(db.String(60), default='')
+    # Github账号
     github = db.Column(db.String(200), default='')
-
+    # 学校
     school = db.Column(db.String(30), default='')
-    phone = db.Column(db.String(11), default='')
+    # 邮箱
     email = db.Column(db.String(60), default='')
-    description = db.Column(db.String(200), default='')
+    # 电话号码
+    phone = db.Column(db.String(20), default='')
+    # 爱好
     hobby = db.Column(db.String(200), default='')
+    # 自我介绍
     info = db.Column(db.String(200), default='')
+    # 学位
     degree = db.Column(db.String(10), default='')
-
+    # 注册时间
     register_time = db.Column(db.DateTime, default=datetime.now())
-
+    # 关联的app列表
     apps = db.relationship('App', backref='developer', lazy='dynamic')
 
-
     def __init__(self, **kwargs):
+        """
+        初始化函数
+        """
         super(Developer, self).__init__(**kwargs)
 
 
@@ -82,6 +66,9 @@ class Developer(db.Model):
 
 
     def confirm(self, token):
+        """
+        身份验证
+        """
         s = Serializer(current_app.config['SECRET_KEY'])
         try:
             data = s.loads(token)
@@ -95,6 +82,9 @@ class Developer(db.Model):
 
 
     def verify_password(self, password):
+        """
+        确认密码是否正确
+        """
         if self.password == password:
             return True
         else:
@@ -102,19 +92,27 @@ class Developer(db.Model):
 
 
     def save(self):
-        self.register_time = datetime.now()
+        """
+        保存用户数据模型数据
+        """
         db.session.add(self)
         db.session.commit()
 
 
     def update(self, info):
-        print info
+        """
+        更新用户数据
+        info 更新的数据集 Dict
+        """
         db.session.query(Developer).\
             filter_by(username=self.username).update(info)
+        db.session.commit()
 
 
-     # 将数据转化为json格式
     def to_json(self):
+        """
+        将数据转化为json格式
+        """
         json_post = dict(username=self.username, nickname=self.nickname,
                          sex=self.sex, qq=self.qq, weibo=self.weibo, github=self.github,
                          school=self.school, phone=self.phone, hobby=self.hobby, info=self.info)
@@ -124,41 +122,64 @@ class Developer(db.Model):
 # App类
 class App(db.Model):
 
+    """
+    App数据模型
+    tablename tb_app
+    """
+
     __tablename__ = 'tb_app'
 
     id = db.Column(db.Integer, primary_key=True)
 
+    # app 名称
     app_name = db.Column(db.String(20), unique=True)
-    company = db.Column(db.String(20), default='')
+    # app Key
+    app_key = db.Column(db.String(20), default="")
+    # app 介绍
     description = db.Column(db.String(200), default='')
+    # app 当前状态
     status = db.Column(db.Integer, default=0)
-    platform = db.Column(db.Integer, default=0)
-    developer_id = db.Column(db.Integer, db.ForeignKey('tb_developer.id'))
+    # app 应用场景
+    platform = db.Column(db.Integer, default=-1)
+    # app创建时间
     create_time = db.Column(db.DateTime, default=datetime.now())
+    # 对应的开发者ID
+    developer_id = db.Column(db.Integer, db.ForeignKey('tb_developer.id'))
 
 
     def __init__(self, **kwargs):
+        """
+        初始化函数
+        """
         super(App, self).__init__(**kwargs)
 
 
-    # 保存APP对象
     def save(self):
+        """
+        保存对象
+        """
         self.create_time = datetime.now()
         # 默认设置为未审核
-        self.status = 0;
+        self.status = 0
 
         db.session.add(self)
         db.session.commit()
 
 
     def find(self, content):
-
+        """
+        按照搜索内容进行搜索
+        """
         return db.session.query(content).filter(App.app_name.like(content)).\
             order_by(self.create_time.desc).all()
 
 
-    # 将数据转化为json格式
     def to_json(self):
+        """
+        将数据转化为json格式
+        """
         json_post = dict(app_name=self.app_name, description=self.description,
-                         status=self.status, company=self.company, create_time=self.create_time)
+                         status=self.status, create_time=self.create_time)
         return json_post
+
+

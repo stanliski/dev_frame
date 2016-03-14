@@ -78,57 +78,74 @@
 
                 <!-- edit form column -->
                 <div class="span7 personal-info">
-                    <div class="alert alert-info">
-                        <i class="icon-lightbulb"></i>
-                        This page shows an example of an alternative layout with the main navbar on the top
-                        <br /> using <strong>.content.wide-content</strong> for this main container
-                    </div>
                     <h5 class="personal-title">基本信息</h5>
 
                     <form />
                         <div class="field-box">
                             <label>用户名:</label>
-                            <input class="span5 inline-input" type="text" value="{{ developer.username }}" />
+                            <input class="span5 inline-input" type="text" name="username" id="username" value="{{ developer.username }}" />
                         </div>
                         <div class="field-box">
                             <label>昵称:</label>
-                            <input class="span5 inline-input" type="text" value="{{ developer.nickname }}" />
+                            <input class="span5 inline-input" type="text" name="nickname" id="nickname" value="{{ developer.nickname }}" />
                         </div>
                         <div class="field-box">
                             <label>邮箱:</label>
-                            <input class="span5 inline-input" type="text" value="{{ developer.email }}" />
+                            <input class="span5 inline-input" type="text" name="email" id="email" value="{{ developer.email }}" />
                         </div>
                         <div class="field-box">
-                            <label>学校:</label>
-                            <input class="span5 inline-input" type="text" value="{{ developer.school }}" />
+                            <label>学校/公司:</label>
+                            <input class="span5 inline-input" type="text" name="school" id="school" value="{{ developer.school }}" />
                         </div>
                         <div class="field-box">
                             <label>性别:</label>
-                            <input class="span5 inline-input" type="text" value="{{ developer.sex }}" />
+                            <div class="ui-select span5">
+                                <input type="hidden" id="apo-situation" name="app-situation"/>
+                                <select name="app-situation" id="app-situation" name="sex" id="sex">
+                                    <option value="-1" />--
+                                    <option value="0" selected/>男
+                                    <option value="1" />女
+                                </select>
+                            </div>
+                        </div>
+                        <div class="field-box">
+                            <label>学位:</label>
+                            <div class="ui-select span5">
+                                <input type="hidden" id="apo-situation" name="app-situation"/>
+                                <select name="app-situation" id="app-situation">
+                                    <option value="-1" />--
+                                    <option value="0" selected />本科
+                                    <option value="1" />硕士
+                                    <option value="2" />博士
+                                    <option value="3" />博士后
+                                </select>
+                            </div>
                         </div>
                         <div class="field-box">
                             <label>电话:</label>
-                            <input class="span5 inline-input" type="text" value="{{ developer.phone }}" />
+                            <input class="span5 inline-input" type="text" name="phone" id="phone" value="{{ developer.phone }}" />
                         </div>
                         <div class="field-box">
                             <label>QQ:</label>
-                            <input class="span5 inline-input" type="text" value="{{ developer.qq }}" />
+                            <input class="span5 inline-input" type="text" name="qq" id="qq" value="{{ developer.qq }}" />
                         </div>
                         <div class="field-box">
                             <label>微博:</label>
-                            <input class="span5 inline-input" type="text" value="{{ developer.weibo }}" />
+                            <input class="span5 inline-input" type="text" name="weibo" id="weibo" value="{{ developer.weibo }}" />
                         </div>
                         <div class="field-box">
                             <label>Github:</label>
-                            <input class="span5 inline-input" type="text" value="{{ developer.github }}" />
+                            <input class="span5 inline-input" type="text" name="github" id="github" value="{{ developer.github }}" />
                         </div>
                         <div class="field-box">
                             <label>自我介绍:</label>
-                            <input class="span5 inline-input" type="text" value="{{ developer.info }}" />
+                            <!--<input class="span5 inline-input" type="text" value="{{ developer.info }}" />-->
+                            <textarea class="span5 inline-input" name="info" id="info" >{{ developer.info }}</textarea>
                         </div>
                         <div class="field-box">
                             <label>兴趣爱好:</label>
-                            <input class="span5 inline-input" type="text" value="{{ developer.hobby }}" />
+                            <textarea class="span5 inline-input" name="hobby" id="hobby" >{{ developer.hobby }}</textarea>
+                            <!--<input class="span5 inline-input" type="text" value="{{ developer.hobby }}" />-->
                         </div>
                         <div class="span6 field-box actions">
                             <input type="button" class="btn-glow success" value="保存修改" />

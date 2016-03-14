@@ -145,7 +145,7 @@
                                                 <div class="ui-select span5">
                                                     <select name="sex" id="sex">
                                                         <option value="" />--
-                                                        <option value="male" />男
+                                                        <option value="male" selected/>男
                                                         <option value="female" />女
                                                     </select>
                                                 </div>
@@ -155,12 +155,10 @@
                                                 <label>邮箱:</label>
                                                 <input class="span8" type="text" id="email" name="email" value="{{ developer.email }}"/>
                                             </div>
-                                            <!--<div class="field-box success">-->
-                                                <!--<label>Username:</label>-->
-                                                <!--<input class="span8" type="text" />-->
-                                                <!--<span class="alert-msg"><i class="icon-ok-sign"></i> Username available</span>-->
-                                            <!--</div>-->
-
+                                            <div class="field-box">
+                                                <label>电话:</label>
+                                                <input class="span8" type="text" id="phone" name="phone" value="{{ developer.phone }}"/>
+                                            </div>
                                     </div>
                                 </div>
                             </div>
@@ -170,7 +168,7 @@
 
                                             <div class="field-box">
                                                 <label>公司/学校:</label>
-                                                <input class="span8" type="text" name="school"  id="school" value="{{ developer.school }}"/>
+                                                <input class="span8" type="text" name="school" id="school" value="{{ developer.school }}"/>
                                             </div>
                                             <div class="field-box">
                                                 <label>学历:</label>
@@ -207,12 +205,12 @@
                                     <div class="span8">
                                             <div class="field-box">
                                                 <label>自我介绍:</label>
-                                                <textarea class="span9" name="info" id="info" value="{{ developer.info }}"></textarea>
+                                                <textarea class="span9" name="info" id="info" >{{ developer.info }}</textarea>
                                                 <!--<span class="charactersleft">90 characters remaining. Field limited to 100 characters</span>-->
                                             </div>
                                             <div class="field-box">
                                                 <label>兴趣爱好:</label>
-                                                <textarea class="span9" name="hobby" id="hobby" value="{{ developer.hobby }}"></textarea>
+                                                <textarea class="span9" name="hobby" id="hobby">{{ developer.hobby }}</textarea>
                                                 <!--<span class="charactersleft">90 characters remaining. Field limited to 100 characters</span>-->
                                             </div>
                                     </div>

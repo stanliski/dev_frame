@@ -115,9 +115,8 @@
                     <div class="span9 with-sidebar">
                         <div class="container">
                             <div class="new_user_form inline-input"/>
-                                <div class="alert alert-info hidden-tablet">
-                                    <i class="icon-lightbulb pull-left"></i>
-                            Click above to see difference between <br />inline and normal inputs on a form
+                                <div id="warning-div" class="alert alert-danger hidden-tablet" style="display:none">
+                                    <span id="warning-span" style="text-align:center"></span>
                                 </div>
                                 <div class="span12 field-box">
                                     <label>应用名称:</label>
@@ -126,28 +125,26 @@
                                 <div class="span12 field-box">
                                     <label>应用类型:</label>
                                     <div class="ui-select span5">
-                                        <select name="app_usage">
-                                            <option value="AK" />--
-                                            <option value="AK" />Beacon工具
-                                            <option value="HI" />摇一摇
-                                            <option value="CA" />监测
-                                            <option value="NV" />签到
+                                        <input type="hidden" id="app-situation" name="app-situation"/>
+                                        <select name="app-situation" id="app-situation">
+                                            <option value="-1" />--
+                                            <option value="0" selected/>Beacon工具
+                                            <option value="1" />摇一摇
+                                            <option value="2" />监测
+                                            <option value="3" />签到
+                                            <option value="4" />其它
                                         </select>
                                     </div>
                                 </div>
-                                <div class="span12 field-box">
-                                    <label>公司:</label>
-                                    <input class="span9" type="text" name="company" id="company" />
-                                </div>
                                 <div class="span12 field-box textarea">
-                                    <label>描述:</label>
+                                    <label>应用介绍:</label>
                                     <textarea class="span9" name="description" id="description"></textarea>
                                     <span class="charactersleft">90 characters remaining. Field limited to 100 characters</span>
                                 </div>
                                 <div class="span11 field-box actions">
                                     <input type="button" class="btn-glow success" value="创建应用" id="create-app-btn" />
                                     <span>OR</span>
-                                    <input type="reset" value="取 消" class="reset" />
+                                    <input type="reset" value="取 消" class="reset" id="cancel-create-btn"/>
                                 </div>
                             </div>
                         </div>

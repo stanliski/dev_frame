@@ -1,5 +1,6 @@
 #! /usr/bin/env/ python
 
+from flask import session
 from flask.ext.script import Manager
 from app import create_app
 from app import db
@@ -16,6 +17,8 @@ def run():
 
 @manager.command
 def create_db():
+    session['username'] = None
+    session['password'] = None
     db.drop_all()
     db.create_all()
 
